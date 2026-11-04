@@ -1,0 +1,18 @@
+#!/bin/sh
+# Arma ~/Applications/"Sonora Hermany.app" con el binario release, el icono propio y firma ad-hoc.
+# Uso: cargo build --release -p sonora && hermany/make-app.sh
+set -e
+here=$(cd "$(dirname "$0")/.." && pwd)
+APP="$HOME/Applications/Sonora Hermany.app"
+ORIG=/Applications/Sonora.app/Contents
+rm -rf "$APP"; mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
+cp "$here/target/release/sonora" "$APP/Contents/MacOS/sonora-hermany"
+cp -R "$ORIG/Resources/icons" "$ORIG"/Resources/LICENSE* "$ORIG/Resources/THIRD-PARTY.md" "$APP/Contents/Resources/"
+cp "$here/hermany/sonora-hermany.icns" "$APP/Contents/Resources/"
+cp "$ORIG/Info.plist" "$APP/Contents/Info.plist"
+PB=/usr/libexec/PlistBuddy
+$PB -c "Set :CFBundleExecutable sonora-hermany" -c "Set :CFBundleIconFile sonora-hermany" \
+    -c "Set :CFBundleIdentifier dev.hermany.sonora-hermany" -c "Set :CFBundleName Sonora-Hermany" \
+    -c "Set :CFBundleDisplayName Sonora\ Hermany" -c "Delete :CFBundleURLTypes" "$APP/Contents/Info.plist"
+codesign --force --deep -s - "$APP"
+echo "listo: $APP"

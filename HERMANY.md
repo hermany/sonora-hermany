@@ -24,3 +24,8 @@ Toolchain: `rust-toolchain.toml` pide 1.98.1 (ya instalado con rustup). La prime
 ## Conectar Sonora al servidor
 En Sonora: proveedor `subsonic` → URL `http://127.0.0.1:4533`, usuario y contraseña del admin.
 Control remoto desde Ayda Desk: CLI `sonora --json current|toggle|next|search …`.
+
+## App con icono
+`hermany/make-app.sh` arma `~/Applications/Sonora Hermany.app` (icono en `hermany/`, regenerable con `hermany/make-icon.swift`).
+Comparte datos con Sonora original (`~/Library/Application Support/sonora`): no abrir las dos a la vez.
+Estado: compila, y `sonora --json providers` solo lista `subsonic`.
