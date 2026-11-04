@@ -5,9 +5,9 @@ let ctx = NSGraphicsContext(bitmapImageRep: rep)!
 NSGraphicsContext.current = ctx
 let g = ctx.cgContext
 func c(_ h: UInt32) -> NSColor { NSColor(red: CGFloat((h>>16)&255)/255, green: CGFloat((h>>8)&255)/255, blue: CGFloat(h&255)/255, alpha: 1) }
-// squircle background, 910px centered in the 1024px canvas with a black-to-graphite gradient 
-let rect = CGRect(x: 57, y: 57, width: 910, height: 910)
-let path = NSBezierPath(roundedRect: rect, xRadius: 204, yRadius: 204)
+// squircle background, 824px (the chatapp frame) centered in the 1024px canvas with a black-to-graphite gradient 
+let rect = CGRect(x: 100, y: 100, width: 824, height: 824)
+let path = NSBezierPath(roundedRect: rect, xRadius: 185, yRadius: 185)
 g.saveGState(); path.addClip()
 NSGradient(colors: [c(0x000000), c(0x111111), c(0x2a2a2a)], atLocations: [0, 0.55, 1], colorSpace: .deviceRGB)!.draw(in: rect, angle: -60)
 // glow
