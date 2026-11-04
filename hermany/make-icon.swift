@@ -5,17 +5,17 @@ let ctx = NSGraphicsContext(bitmapImageRep: rep)!
 NSGraphicsContext.current = ctx
 let g = ctx.cgContext
 func c(_ h: UInt32) -> NSColor { NSColor(red: CGFloat((h>>16)&255)/255, green: CGFloat((h>>8)&255)/255, blue: CGFloat(h&255)/255, alpha: 1) }
-// squircle background, 824px (the chatapp frame) centered in the 1024px canvas with a black-to-graphite gradient 
-let rect = CGRect(x: 100, y: 100, width: 824, height: 824)
+// squircle background, chatapp frame width (824px) and 20px taller in the 1024px canvas with a black-to-graphite gradient 
+let rect = CGRect(x: 100, y: 90, width: 824, height: 844)
 let path = NSBezierPath(roundedRect: rect, xRadius: 185, yRadius: 185)
 g.saveGState(); path.addClip()
 NSGradient(colors: [c(0x000000), c(0x111111), c(0x2a2a2a)], atLocations: [0, 0.55, 1], colorSpace: .deviceRGB)!.draw(in: rect, angle: -60)
 // glow
 NSGradient(colors: [c(0xffffff).withAlphaComponent(0.14), c(0xffffff).withAlphaComponent(0)], atLocations: [0, 1], colorSpace: .deviceRGB)!.draw(fromCenter: CGPoint(x: 512, y: 560), radius: 0, toCenter: CGPoint(x: 512, y: 560), radius: 420, options: [])
 // sound bars
-let s: CGFloat = 1.47
+let s: CGFloat = 1.06
 let heights: [CGFloat] = [180, 320, 470, 360, 250, 400, 210].map { $0 * s }
-let bw: CGFloat = 76, gap: CGFloat = 34
+let bw: CGFloat = 55, gap: CGFloat = 24.5
 let total = CGFloat(heights.count) * bw + CGFloat(heights.count - 1) * gap
 var x = (1024 - total) / 2
 for h in heights {
