@@ -114,14 +114,9 @@ fn main() -> ExitCode {
         }
 
         let database = storage::Database::standard();
-        let providers: Vec<Arc<dyn music::MusicProvider>> = vec![
-            Arc::new(music::spotify::SpotifyProvider::from_env()),
-            Arc::new(music::apple::AppleProvider::new()),
-            Arc::new(music::youtube::YouTubeProvider::new()),
-            Arc::new(music::subsonic::SubsonicProvider::new()),
-            Arc::new(music::deezer::DeezerProvider::new()),
-            Arc::new(music::tidal::TidalProvider::new()),
-        ];
+        // sonora-hermany: only the self-hosted Subsonic server (Navidrome over ~/Music); no third-party services.
+        let providers: Vec<Arc<dyn music::MusicProvider>> =
+            vec![Arc::new(music::subsonic::SubsonicProvider::new())];
         let local_provider: Arc<dyn music::MusicProvider> =
             Arc::new(music::local::LocalProvider::new(
                 dirs::cache_dir()
@@ -133,13 +128,6 @@ fn main() -> ExitCode {
         let lyrics: Vec<Arc<dyn LyricsProvider>> = vec![
             Arc::new(music::local::LocalLyrics),
             Arc::new(music::subsonic::SubsonicLyrics::new()),
-            Arc::new(music::spotify::SpotifyLyrics::from_env()),
-            Arc::new(music::youtube::YouTubeLyrics::new()),
-            Arc::new(music::binimum::Binimum::new()),
-            Arc::new(music::musixmatch::Musixmatch::new()),
-            Arc::new(music::lrclib::LrcLib::new()),
-            Arc::new(music::kugou::Kugou::new()),
-            Arc::new(music::netease::NetEase::new()),
         ];
         state::init(cx, io, database, providers, local_provider, lyrics);
         #[cfg(target_os = "windows")]
