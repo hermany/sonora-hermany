@@ -9,9 +9,7 @@ func c(_ h: UInt32) -> NSColor { NSColor(red: CGFloat((h>>16)&255)/255, green: C
 let rect = CGRect(x: 100, y: 100, width: 824, height: 824)
 let path = NSBezierPath(roundedRect: rect, xRadius: 185, yRadius: 185)
 g.saveGState(); path.addClip()
-NSGradient(colors: [c(0x0a0a0a), c(0x161616), c(0x2e2e2e)], atLocations: [0, 0.55, 1], colorSpace: .deviceRGB)!.draw(in: rect, angle: 90)
-// glow
-NSGradient(colors: [c(0xffffff).withAlphaComponent(0.14), c(0xffffff).withAlphaComponent(0)], atLocations: [0, 1], colorSpace: .deviceRGB)!.draw(fromCenter: CGPoint(x: 512, y: 560), radius: 0, toCenter: CGPoint(x: 512, y: 560), radius: 420, options: [])
+NSGradient(colors: [c(0x060606), c(0x1c1c1c), c(0x404040)], atLocations: [0, 0.55, 1], colorSpace: .deviceRGB)!.draw(in: rect, angle: 90)
 // sound bars
 let s: CGFloat = 1.053
 let heights: [CGFloat] = [180, 320, 470, 360, 250, 400, 210].map { $0 * s }
@@ -19,7 +17,7 @@ let bw: CGFloat = 57, gap: CGFloat = 26
 let total = CGFloat(heights.count) * bw + CGFloat(heights.count - 1) * gap
 var x = (1024 - total) / 2
 for h in heights {
-  let r = CGRect(x: x, y: 512 - h/2, width: bw, height: h)
+  let r = CGRect(x: x, y: 521.5 - h/2, width: bw, height: h)
   NSColor.white.setFill()
   NSBezierPath(roundedRect: r, xRadius: bw/2, yRadius: bw/2).fill()
   x += bw + gap
