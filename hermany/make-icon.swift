@@ -24,10 +24,10 @@ for h in heights {
   NSBezierPath(roundedRect: r, xRadius: bw/2, yRadius: bw/2).fill()
   x += bw + gap
 }
-// solid black rim so the edge is crisp and the body reaches the full canvas, following the system corner curve
+// thin light rim so the edge reads against a dark Dock, following the system corner curve
 let rim = NSBezierPath(roundedRect: rect.insetBy(dx: 5, dy: 5), xRadius: 219, yRadius: 219)
 rim.lineWidth = 10
-NSColor.black.setStroke()
+NSColor.white.withAlphaComponent(0.3).setStroke()
 rim.stroke()
 g.restoreGState()
 NSGraphicsContext.current = nil
