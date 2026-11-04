@@ -5,9 +5,9 @@ let ctx = NSGraphicsContext(bitmapImageRep: rep)!
 NSGraphicsContext.current = ctx
 let g = ctx.cgContext
 func c(_ h: UInt32) -> NSColor { NSColor(red: CGFloat((h>>16)&255)/255, green: CGFloat((h>>8)&255)/255, blue: CGFloat(h&255)/255, alpha: 1) }
-// full-bleed square background (the system applies the corner mask) with a black-to-graphite gradient 
-let rect = CGRect(x: 0, y: 0, width: 1024, height: 1024)
-let path = NSBezierPath(rect: rect)
+// squircle background, 910px centered in the 1024px canvas with a black-to-graphite gradient 
+let rect = CGRect(x: 57, y: 57, width: 910, height: 910)
+let path = NSBezierPath(roundedRect: rect, xRadius: 204, yRadius: 204)
 g.saveGState(); path.addClip()
 NSGradient(colors: [c(0x000000), c(0x111111), c(0x2a2a2a)], atLocations: [0, 0.55, 1], colorSpace: .deviceRGB)!.draw(in: rect, angle: -60)
 // glow
@@ -24,11 +24,6 @@ for h in heights {
   NSBezierPath(roundedRect: r, xRadius: bw/2, yRadius: bw/2).fill()
   x += bw + gap
 }
-// thin light rim so the edge reads against a dark Dock, following the system corner curve
-let rim = NSBezierPath(roundedRect: rect.insetBy(dx: 5, dy: 5), xRadius: 219, yRadius: 219)
-rim.lineWidth = 10
-NSColor.white.withAlphaComponent(0.3).setStroke()
-rim.stroke()
 g.restoreGState()
 NSGraphicsContext.current = nil
 try! rep.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: CommandLine.arguments[1]))
