@@ -13,7 +13,7 @@ NSGradient(colors: [c(0x000000), c(0x111111), c(0x2a2a2a)], atLocations: [0, 0.5
 // glow
 NSGradient(colors: [c(0xffffff).withAlphaComponent(0.14), c(0xffffff).withAlphaComponent(0)], atLocations: [0, 1], colorSpace: .deviceRGB)!.draw(fromCenter: CGPoint(x: 512, y: 560), radius: 0, toCenter: CGPoint(x: 512, y: 560), radius: 420, options: [])
 // sound bars
-let s: CGFloat = 1.25
+let s: CGFloat = 1.3
 let heights: [CGFloat] = [180, 320, 470, 360, 250, 400, 210].map { $0 * s }
 let bw: CGFloat = 62 * s, gap: CGFloat = 36 * s
 let total = CGFloat(heights.count) * bw + CGFloat(heights.count - 1) * gap
