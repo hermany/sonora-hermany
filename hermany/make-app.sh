@@ -9,10 +9,10 @@ rm -rf "$APP"; mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$here/target/release/sonora" "$APP/Contents/MacOS/sonora-hermany-bin"
 cat > "$APP/Contents/MacOS/sonora-hermany" <<'LAUNCHER'
 #!/bin/sh
-# Lanza Navidrome si el puerto 4533 esta libre, corre Sonora y apaga Navidrome al salir.
+# Con streaming activado (existe ~/.config/sonora-hermany/streaming) lanza Navidrome si el puerto 4533 esta libre; apaga Navidrome al salir.
 dir=$(dirname "$0")
 NAV=/opt/homebrew/bin/navidrome
-if ! nc -z 127.0.0.1 4533 2>/dev/null && [ -x "$NAV" ]; then
+if [ -f "$HOME/.config/sonora-hermany/streaming" ] && ! nc -z 127.0.0.1 4533 2>/dev/null && [ -x "$NAV" ]; then
     "$NAV" --configfile "$HOME/.config/navidrome/navidrome.toml" >>"$HOME/Library/Logs/navidrome.log" 2>&1 &
     nav=$!
     trap 'kill $nav 2>/dev/null' EXIT

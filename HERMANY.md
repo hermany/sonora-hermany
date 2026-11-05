@@ -29,3 +29,7 @@ Control remoto desde Ayda Desk: CLI `sonora --json current|toggle|next|search â€
 `hermany/make-app.sh` arma `~/Applications/Sonora Hermany.app` (icono en `hermany/`, regenerable con `hermany/make-icon.swift`).
 Comparte datos con Sonora original (`~/Library/Application Support/sonora`): no abrir las dos a la vez.
 Estado: compila, y `sonora --json providers` solo lista `subsonic`.
+
+## Streaming opcional
+El lanzador de la app solo arranca Navidrome si existe `~/.config/sonora-hermany/streaming`
+(`touch` para activar, `rm` para desactivar). Sin Ã©l, Sonora reproduce solo archivos locales y no gasta recursos en el servidor.
