@@ -36,8 +36,8 @@ nav-sidebar-right = Mostrar u ocultar la letra y la cola
 nav-pinned = Fijados
 nav-unpin = Dejar de fijar
 nav-pin-hint = Suelta aquí para fijar
-library-liked-songs = Favoritos
-library-no-songs = Todavía no tienes favoritos
+library-liked-songs = Me gusta
+library-no-songs = Todavía no tienes canciones que te gusten
 library-no-albums = Todavía no tienes álbumes guardados
 library-no-playlists = Todavía no tienes listas de reproducción
 library-no-artists = Todavía no tienes artistas favoritos
@@ -101,8 +101,8 @@ menu-import-playlist = Importar lista…
 menu-edit-tags = Editar etiquetas
 menu-no-playlists = Sin listas de reproducción
 menu-search-playlists = Buscar una lista
-menu-add-to-library = Añadir a Favoritos
-menu-remove-from-library = Quitar de Favoritos
+menu-add-to-library = Añadir a Me gusta
+menu-remove-from-library = Quitar de Me gusta
 menu-remove-from-playlist = Quitar de la lista
 menu-remove-tracks-from-playlist = { $count ->
     [one] Quitar { $count } pista de la lista
@@ -199,8 +199,8 @@ confirm-remove-albums = { $count ->
    *[other] ¿Quitar { $count } álbumes de tu biblioteca?
 }
 confirm-remove-artists = { $count ->
-    [one] ¿Quitar este artista de Favoritos?
-   *[other] ¿Quitar { $count } artistas de Favoritos?
+    [one] ¿Quitar este artista de Me gusta?
+   *[other] ¿Quitar { $count } artistas de Me gusta?
 }
 confirm-remove-playlists = { $count ->
     [one] ¿Quitar esta lista de tu biblioteca?
@@ -279,7 +279,7 @@ filter-duration = Duración
 filter-year = Año
 filter-hide-explicit = Ocultar explícitas
 filter-playable = Solo reproducibles
-filter-favorites = Solo favoritos
+filter-favorites = Solo me gusta
 filter-downloaded = Descargadas
 filter-owned = Tuyas
 
@@ -1129,19 +1129,19 @@ toast-playlists-removed = { $count ->
         [one] Se quitó una lista
        *[other] Se quitaron { $count } listas
     } de tu biblioteca
-toast-favorite-removed = Se quitó { $name } de Favoritos
+toast-favorite-removed = Se quitó { $name } de Me gusta
 toast-favorite-songs-removed = { $count ->
         [one] Se quitó una canción
        *[other] Se quitaron { $count } canciones
-    } de Favoritos
+    } de Me gusta
 toast-favorite-albums-removed = { $count ->
         [one] Se quitó un álbum
        *[other] Se quitaron { $count } álbumes
-    } de Favoritos
+    } de Me gusta
 toast-favorite-artists-removed = { $count ->
         [one] Se quitó un artista
        *[other] Se quitaron { $count } artistas
-    } de Favoritos
+    } de Me gusta
 toast-tracks-removed = { $count ->
         [one] Se quitó una canción
        *[other] Se quitaron { $count } canciones

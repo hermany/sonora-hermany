@@ -45,6 +45,9 @@ const PLAYLIST_COVER: CoverLimits = CoverLimits {
 /// The OpenSubsonic extension that takes a playback position and state.
 const PLAYBACK_REPORT: &str = "playbackReport";
 /// The edge of a list cover, in pixels.
+/// The playlist that holds the songs the user liked, since the server only has stars and a
+/// playlist is what shows up in the library.
+const LIKED_PLAYLIST: &str = "Me gusta";
 const COVER: i32 = 300;
 /// The edge of a large cover, wide enough for the fullscreen player on a 2x display. The server
 /// only scales down, so a smaller original comes back as it is. Asking for the original instead
@@ -68,6 +71,9 @@ pub struct SubsonicClient {
     covers: String,
     /// Whether the server takes `reportPlayback`, asked the first time a report goes out.
     playback_report: Arc<OnceCell<bool>>,
+    /// Held while the liked playlist is looked up and possibly created, so two likes in a row
+    /// never make two of them.
+    liked_lock: Arc<tokio::sync::Mutex<()>>,
 }
 
 /// What the server records about a track that playback wants before the decoder can tell.
@@ -106,6 +112,7 @@ impl SubsonicClient {
             http: reqwest::Client::new(),
             covers,
             playback_report: Arc::default(),
+            liked_lock: Arc::default(),
         })
     }
 
@@ -467,16 +474,8 @@ impl MusicApi for SubsonicClient {
     }
 
     async fn saved_tracks(&self) -> Result<Vec<Track>> {
-        let starred = self
-            .client
-            .get_starred2(None)
-            .await
-            .context("cannot load the starred songs")?;
-        Ok(starred
-            .song
-            .into_iter()
-            .map(|song| self.song(song))
-            .collect())
+        let id = self.liked_playlist().await?;
+        self.playlist_tracks(&id).await
     }
 
     /// Every song on the server. An empty `search3` query lists the whole library on
@@ -510,9 +509,22 @@ impl MusicApi for SubsonicClient {
     }
 
     async fn set_track_saved(&self, track_id: &str, saved: bool) -> Result<()> {
-        self.change_saved(saved, &[track_id], &[], &[])
+        let id = self.liked_playlist().await?;
+        let detail = self
+            .client
+            .get_playlist(&id)
             .await
-            .with_context(|| format!("cannot change the star for {track_id}"))
+            .context("cannot load the liked playlist")?;
+        let at = detail.entry.iter().position(|song| song.id == track_id);
+        match (saved, at) {
+            (true, None) => self.add_track_to_playlist(&id, track_id).await,
+            (false, Some(index)) => self
+                .client
+                .update_playlist(&id, None, None, None, &[], &[index as i32])
+                .await
+                .context("cannot remove the track from the liked playlist"),
+            _ => Ok(()),
+        }
     }
 
     async fn track(&self, track_id: &str) -> Result<Track> {
@@ -1066,6 +1078,40 @@ impl MusicApi for SubsonicClient {
 }
 
 impl SubsonicClient {
+    /// The id of the user's liked playlist. A first run creates it with the songs already
+    /// starred, so nothing liked before is lost.
+    async fn liked_playlist(&self) -> Result<String> {
+        let _held = self.liked_lock.lock().await;
+        let found = self
+            .client
+            .get_playlists(None)
+            .await
+            .context("cannot load the playlists")?
+            .into_iter()
+            .find(|playlist| {
+                playlist.name == LIKED_PLAYLIST
+                    && playlist
+                        .owner
+                        .as_deref()
+                        .is_none_or(|owner| owner == self.username)
+            });
+        if let Some(playlist) = found {
+            return Ok(playlist.id);
+        }
+        let starred = self
+            .client
+            .get_starred2(None)
+            .await
+            .context("cannot load the starred songs")?;
+        let ids: Vec<&str> = starred.song.iter().map(|song| song.id.as_str()).collect();
+        let created = self
+            .client
+            .create_playlist(None, Some(LIKED_PLAYLIST), &ids)
+            .await
+            .context("cannot create the liked playlist")?;
+        Ok(created.id)
+    }
+
     async fn change_saved(
         &self,
         saved: bool,

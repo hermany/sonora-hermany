@@ -627,6 +627,10 @@ impl Library {
             let result = join(io.spawn(S::ask(client, asked, saved))).await;
             this.update(cx, |this, cx| {
                 S::requests(this).remove(&answered);
+                // a server that keeps likes in a playlist has a new count for it to show
+                if result.is_ok() && matches!(S::FAMILY, Family::SavedTracks) {
+                    this.relist(cx);
+                }
                 let gone = match result {
                     Ok(()) if saved => {
                         S::admit(this, item, cx);
