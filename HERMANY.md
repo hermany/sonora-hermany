@@ -3,8 +3,8 @@
 Fork local de Sonora que solo usa mi servidor de música (Navidrome sobre `~/Music`, API Subsonic).
 
 ## Qué cambia respecto al original
-- `crates/sonora/src/main.rs`: la lista de proveedores queda solo con `SubsonicProvider`
-  (se quitan Spotify, Apple, YouTube, Deezer, TIDAL) y las letras solo vienen de archivos locales y del servidor Subsonic.
+- `crates/sonora/src/main.rs`: la lista de proveedores queda con Subsonic, Spotify y YouTube
+  (se quitan Apple, Deezer, TIDAL); letras de archivos locales, Subsonic, Spotify y YouTube.
 
 ## Servidor (Navidrome)
 - Instalado con `brew install navidrome`; config en `~/.config/navidrome/navidrome.toml`
@@ -26,10 +26,9 @@ En Sonora: proveedor `subsonic` → URL `http://127.0.0.1:4533`, usuario y contr
 Control remoto desde Ayda Desk: CLI `sonora --json current|toggle|next|search …`.
 
 ## App con icono
-`hermany/make-app.sh` arma `~/Applications/Sonora Hermany.app` (icono en `hermany/`, regenerable con `hermany/make-icon.swift`).
+`hermany/make-app.sh` arma `/Applications/Sonora Hermany.app` (icono en `hermany/`, regenerable con `hermany/make-icon.swift`).
 Comparte datos con Sonora original (`~/Library/Application Support/sonora`): no abrir las dos a la vez.
 Estado: compila, y `sonora --json providers` solo lista `subsonic`.
 
-## Streaming opcional
-El lanzador de la app solo arranca Navidrome si existe `~/.config/sonora-hermany/streaming`
-(`touch` para activar, `rm` para desactivar). Sin él, Sonora reproduce solo archivos locales y no gasta recursos en el servidor.
+## Navidrome al abrir
+El lanzador de la app arranca Navidrome si el puerto 4533 esta libre y lo apaga al salir.
