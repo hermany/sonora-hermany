@@ -598,6 +598,30 @@ impl MusicApi for LocalClient {
             .collect())
     }
 
+    async fn search_albums(&self, query: &str) -> Result<Vec<Album>> {
+        let query = query.to_lowercase();
+        let scanned = self.scanned.read().unwrap();
+        Ok(scanned
+            .albums
+            .iter()
+            .filter(|album| {
+                album.name.to_lowercase().contains(&query)
+                    || album.artists.to_lowercase().contains(&query)
+            })
+            .cloned()
+            .collect())
+    }
+
+    async fn search_playlists(&self, query: &str) -> Result<Vec<Playlist>> {
+        let query = query.to_lowercase();
+        Ok(self
+            .playlists()
+            .await?
+            .into_iter()
+            .filter(|playlist| playlist.name.to_lowercase().contains(&query))
+            .collect())
+    }
+
     async fn delete_track_file(&self, track_id: &str) -> Result<()> {
         let path = wire::path_from_track_id(track_id)
             .ok_or_else(|| anyhow!("{track_id} is not a local track id"))?;
